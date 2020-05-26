@@ -17,7 +17,7 @@ void main_task(void * pvParameter)
 
     // initializing LCD, Bluetooth, Input switch
     engine_load_init();
-    // setup_switches();
+    setup_switches();
     i2c_master_init();
 
     lcd_display_text("Connecting to", "Bluetooth OBD2");

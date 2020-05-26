@@ -48,33 +48,25 @@ fuel level, Engine coolant temperature, Battery voltage, etc. It can also displa
 
 ## Circuit
 
-### Pinout on shift register's board
+Connectors to esp32 based control module
 
-This board has no circuit documentation right now. The board is responsible for driving 
-8 leds that are supposed to display Engine Load: 6 green, 2 yellow.
+[RED  ] +5 V
+[BLUE ] GND
+[BLACK] Led on the Button (yellow, 110 Ohm)
+[BLACK] STRIP 1 (green, 110 Ohm)
+[BLACK] STRIP 2 (green, 110 Ohm)
+[BLACK] STRIP 3 (green, 110 Ohm)
+[BLACK] STRIP 4 (yellow, 110 Ohm)
+[BLACK] STRIP 5 (red, 500 Ohm)
 
-- 1-8: Leds
-- 16: 3.3V
-- 15: GND from ESP32
-- 14: CLK
-- 13: LATCH
-- 12: DATA
-- 11: GND for display LEDs
+[YELLOW] CLK for LCD
+[BLACK ] DATA for LCD
+[BLACK ] Button - top/right
+[BLACK ] Button - bottom/right
+[BLACK ] Button - on/off
+[BLACK ] Button - bottom/left
 
-### Pinout on ESP32
-
-### Driving LCD 1602 display
-
-- GPIO 26: DATA
-- GPIO 27: CLOCK
-
-### Driving last LED of Engine Load display (red)
-
-- GPIO 12: Red LED
-
-### Switch input (mode selection for LCD display)
-
-- GPIO 34: Mode selection (1.5K Ohm to GND, 1K Ohm to signal)
+Switches: GPIOs are grounded via one 1.5k Ohm resistor. Signal goes through 1k resistors.
 
 ## ESP-IDF
 

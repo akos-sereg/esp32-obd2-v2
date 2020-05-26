@@ -10,4 +10,6 @@ void reset_app_state() {
     app_state.obd2_values.rpm = 0;
     app_state.obd2_values.fuel_level = 0;
     app_state.obd2_values.fuel_in_liter = 0.0;
+
+    app_state.device_on = 1;
 }

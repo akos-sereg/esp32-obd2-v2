@@ -35,17 +35,18 @@ void listen_switches(void* arg)
                 }
             }
 
-            if (io_num == GPIO_INPUT_IO && SWITCH_1_STATE != current_state) {
+            if ((io_num == GPIO_INPUT_IO_1 || io_num == GPIO_INPUT_IO_2 || io_num == GPIO_INPUT_IO_3 || io_num == GPIO_INPUT_IO_4) && SWITCH_1_STATE != current_state) {
                 printf("GPIO[%d] state: %d\n", io_num, current_state);
                 SWITCH_1_STATE = current_state;
 
                 // rising edge
                 if (current_state == 1) {
-                    sw_key_pressed_at = get_epoch_milliseconds();
+                    // sw_key_pressed_at = get_epoch_milliseconds();
+                    app_state.device_on = app_state.device_on == 1 ? 0 : 1;
                 }
 
                 // falling edge
-                if (current_state == 0) {
+                /*if (current_state == 0) {
 
 
                     // short key press: navigate to next screen
@@ -64,7 +65,7 @@ void listen_switches(void* arg)
                     }
 
                     sw_key_pressed_at = 0;
-                }
+                }*/
             }
         }
     }
@@ -94,7 +95,10 @@ void setup_switches()
     gpio_config(&io_conf);
 
     //change gpio intrrupt type for one pin
-    gpio_set_intr_type(GPIO_INPUT_IO, GPIO_INTR_ANYEDGE);
+    gpio_set_intr_type(GPIO_INPUT_IO_1, GPIO_INTR_ANYEDGE);
+    gpio_set_intr_type(GPIO_INPUT_IO_2, GPIO_INTR_ANYEDGE);
+    gpio_set_intr_type(GPIO_INPUT_IO_3, GPIO_INTR_ANYEDGE);
+    gpio_set_intr_type(GPIO_INPUT_IO_4, GPIO_INTR_ANYEDGE);
 
     //create a queue to handle gpio event from isr
     gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
@@ -106,12 +110,21 @@ void setup_switches()
     gpio_install_isr_service(ESP_INTR_FLAG_DEFAULT);
 
     //hook isr handler for specific gpio pin
-    gpio_isr_handler_add(GPIO_INPUT_IO, gpio_isr_handler, (void*) GPIO_INPUT_IO);
+    gpio_isr_handler_add(GPIO_INPUT_IO_1, gpio_isr_handler, (void*) GPIO_INPUT_IO_1);
+    gpio_isr_handler_add(GPIO_INPUT_IO_2, gpio_isr_handler, (void*) GPIO_INPUT_IO_2);
+    gpio_isr_handler_add(GPIO_INPUT_IO_3, gpio_isr_handler, (void*) GPIO_INPUT_IO_3);
+    gpio_isr_handler_add(GPIO_INPUT_IO_4, gpio_isr_handler, (void*) GPIO_INPUT_IO_4);
 
     //remove isr handler for gpio number.
-    gpio_isr_handler_remove(GPIO_INPUT_IO);
+    gpio_isr_handler_remove(GPIO_INPUT_IO_1);
+    gpio_isr_handler_remove(GPIO_INPUT_IO_2);
+    gpio_isr_handler_remove(GPIO_INPUT_IO_3);
+    gpio_isr_handler_remove(GPIO_INPUT_IO_4);
 
     //hook isr handler for specific gpio pin again
-    gpio_isr_handler_add(GPIO_INPUT_IO, gpio_isr_handler, (void*) GPIO_INPUT_IO);
+    gpio_isr_handler_add(GPIO_INPUT_IO_1, gpio_isr_handler, (void*) GPIO_INPUT_IO_1);
+    gpio_isr_handler_add(GPIO_INPUT_IO_2, gpio_isr_handler, (void*) GPIO_INPUT_IO_2);
+    gpio_isr_handler_add(GPIO_INPUT_IO_3, gpio_isr_handler, (void*) GPIO_INPUT_IO_3);
+    gpio_isr_handler_add(GPIO_INPUT_IO_4, gpio_isr_handler, (void*) GPIO_INPUT_IO_4);
 }
 

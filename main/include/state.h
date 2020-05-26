@@ -23,6 +23,8 @@ typedef struct app_state_t {
     int rpm; // value from 0 to 9
 
   } obd2_values;
+
+  int device_on;
 } app_state_t;
 
 extern app_state_t app_state;

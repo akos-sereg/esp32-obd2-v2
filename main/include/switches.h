@@ -12,8 +12,15 @@
 #include "nvs-store.h"
 #include "protocol.h"
 
-#define GPIO_INPUT_IO	    34
+#define GPIO_INPUT_IO_1	    32
+#define GPIO_INPUT_IO_2	    36
+#define GPIO_INPUT_IO_3	    34
+#define GPIO_INPUT_IO_4	    35
+
 #define GPIO_INPUT_PIN_SEL  (1ULL<<GPIO_INPUT_IO)
+#define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_1) | (1ULL<<GPIO_INPUT_IO_2) | (1ULL<<GPIO_INPUT_IO_3) | (1ULL<<GPIO_INPUT_IO_4))
+
+
 #define ESP_INTR_FLAG_DEFAULT 0
 #define LONG_KEYPRESS_INTERVAL_MS   1200 // holding the button in pressed state in this amount of time (ms) is considered as a long key press
 
