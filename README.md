@@ -1,15 +1,8 @@
-# esp32-obd2
+# esp32-obd2-v2
 
 OBDII based car diagnostics dashboard.
 
 ![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2/master/docs/board.jpg)
-
-## Purpose of this project
-
-There is a smartphone holder hole in the center dashboard's lower section in my car, which is 
-out of use (my smartphone does not fit there), so I wanted to fill up that unused space with 
-a device which reads data from the car's OBDII interface, and displays Engine Load, Coolant temp. 
-and other metrics.
 
 ## Usage
 
@@ -69,12 +62,6 @@ This board has no circuit documentation right now. The board is responsible for 
 - 11: GND for display LEDs
 
 ### Pinout on ESP32
-
-### Driving shift register (Engine Load)
-
-- GPIO 32: LATCH
-- GPIO 25: DATA
-- GPIO 33: CLOCK
 
 ### Driving LCD 1602 display
 

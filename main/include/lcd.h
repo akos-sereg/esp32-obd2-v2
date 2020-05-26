@@ -11,8 +11,8 @@
 #define I2C_MASTER_TX_BUF_LEN		0 		// disabled
 #define I2C_MASTER_RX_BUF_LEN		0		// disabled
 #define I2C_MASTER_FREQ_HZ		100000
-#define I2C_MASTER_SDA_IO		26
-#define I2C_MASTER_SCL_IO		27
+#define I2C_MASTER_SDA_IO		5
+#define I2C_MASTER_SCL_IO		17
 
 extern void i2c_master_init(void);
 extern void refresh_lcd_display();

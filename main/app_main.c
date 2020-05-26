@@ -18,13 +18,15 @@ void main_task(void * pvParameter)
     // initializing LCD, Bluetooth, Input switch
     engine_load_init();
     // setup_switches();
-    // i2c_master_init();
+    i2c_master_init();
 
-    // lcd_display_text("Connecting to", "Bluetooth OBD2");
+    lcd_display_text("Connecting to", "Bluetooth OBD2");
     // init_animation();
 
     while(1) {
         cnt++;
+
+        led_strip_set(cnt % 6);
 
         /*
         // measure time spent on displaying "Connecting to bluetooth" and "Connected" LCD messages
@@ -101,7 +103,7 @@ void main_task(void * pvParameter)
 
 void app_main()
 {
-    init_bluetooth();
+    // init_bluetooth();
     init_nvs_store();
 
     // load LCD display mode (page) from NVS memory - refresh_lcd_display() will show

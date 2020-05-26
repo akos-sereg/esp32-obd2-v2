@@ -22,6 +22,8 @@ void led_strip_set(int value) {
         return;
     }
 
+    gpio_set_level(LED_BUTTON, 1);
+
     gpio_set_level(LED_STRIP_1, value > 0 ? 1 : 0);
     gpio_set_level(LED_STRIP_2, value > 1 ? 1 : 0);
     gpio_set_level(LED_STRIP_3, value > 2 ? 1 : 0);
