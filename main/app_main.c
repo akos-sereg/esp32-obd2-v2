@@ -20,7 +20,7 @@ void main_task(void * pvParameter)
     setup_switches();
     i2c_master_init();
 
-    lcd_display_text("Connecting to", "Bluetooth OBD2");
+    lcd_display_text("Connecting to", "OBD2 device");
     // init_animation();
 
     while(1) {

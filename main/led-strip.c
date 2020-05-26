@@ -22,13 +22,15 @@ void led_strip_set(int value) {
         return;
     }
 
-    gpio_set_level(LED_BUTTON, app_state.device_on);
-
     gpio_set_level(LED_STRIP_1, value > 0 ? 1 : 0);
     gpio_set_level(LED_STRIP_2, value > 1 ? 1 : 0);
     gpio_set_level(LED_STRIP_3, value > 2 ? 1 : 0);
     gpio_set_level(LED_STRIP_4, value > 3 ? 1 : 0);
     gpio_set_level(LED_STRIP_5, value > 4 ? 1 : 0);
+}
+
+void led_strip_power_on_refresh() {
+    gpio_set_level(LED_BUTTON, app_state.device_on);
 }
 /*
 void init_animation() {

@@ -24,6 +24,8 @@ extern void engine_load_init();
  */
 extern void led_strip_set(int load);
 
+extern void led_strip_power_on_refresh();
+
 /**
  * Plays animation when device is initialized
  */
