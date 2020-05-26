@@ -5,22 +5,24 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 
-#define LED_STRIP_LATCH_GPIO	32
-#define LED_STRIP_DATA_GPIO	25
-#define LED_STRIP_CLOCK_GPIO	33
+#define LED_STRIP_1	33  // normal
+#define LED_STRIP_2	25  // normal
+#define LED_STRIP_3	26  // normal
+#define LED_STRIP_4	23  // normal
+#define LED_STRIP_5	1   // pad select
+#define LED_BUTTON	22  // normal
 
-#define LED_STRIP_RED		12 /* not controlled by SN74HC595N shift register */
-
+// todo: rename this method
 extern void engine_load_init();
 
 /**
- * load value can be: 0-9
+ * load value can be: 0-5
  */
 extern void led_strip_set(int load);
 
 /**
  * Plays animation when device is initialized
  */
-extern void init_animation();
+// extern void init_animation();
 
 #endif

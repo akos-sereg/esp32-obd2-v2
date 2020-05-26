@@ -4,7 +4,7 @@
 void main_task(void * pvParameter)
 {
     int cnt = 0;
-    int tick_rate_ms = 50;
+    int tick_rate_ms = 500;
     int64_t now;
 
     // initializing app state
@@ -17,15 +17,16 @@ void main_task(void * pvParameter)
 
     // initializing LCD, Bluetooth, Input switch
     engine_load_init();
-    setup_switches();
-    i2c_master_init();
+    // setup_switches();
+    // i2c_master_init();
 
-    lcd_display_text("Connecting to", "Bluetooth OBD2");
-    init_animation();
+    // lcd_display_text("Connecting to", "Bluetooth OBD2");
+    // init_animation();
 
     while(1) {
         cnt++;
 
+        /*
         // measure time spent on displaying "Connecting to bluetooth" and "Connected" LCD messages
         if (cnt == 10) {
             cnt = 0;
@@ -92,7 +93,7 @@ void main_task(void * pvParameter)
             lcd_display_text("Restarting ...", "");
             nvs_shutdown();
             esp_restart();
-        }
+        }*/
 
         vTaskDelay(tick_rate_ms / portTICK_RATE_MS);
     }
