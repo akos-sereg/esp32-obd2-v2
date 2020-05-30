@@ -20,5 +20,6 @@ int nvs_flash_is_open;
 char *NVS_KEY_MODE;
 char *NVS_KEY_IS_ON;
 char *NVS_KEY_LCD_BACKLIGHT;
+char *NVS_KEY_IS_LS_ON;
 
 #endif

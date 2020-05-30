@@ -6,13 +6,15 @@ OBDII based car diagnostics dashboard.
 
 ### Display
 
-- There is a led strip (6 green, 2 yellow, 1 red) which is supposed to display the Engine Load
-- LCD display shows more information, based on it'smode set by push button
+- There is a led strip (3 green, 1 yellow, 1 red) which is supposed to display the Engine Load
+- LCD display shows more information, based on it's mode set by up / down buttons
 
 ### Buttons
 
-- Power On: power supply from the car's USB outlet
-- Push button: change modes, display different metrics on LCD: coolant temp, distance to empty, etc.
+- On/Off: led indicates if devices is switched on or off. If device is off, it is not making OBD2 calls, but still listens for key press events. In Off -> On transition, esp_restart() is called to start from scratch
+- Up (top right): mode selection
+- Down (bottom right): mode selection
+- Toggle led-strip: switch led-strip on/off
 
 ## Configuration
 
@@ -39,10 +41,7 @@ Device will automatically handle your command as OBD2 response (41) for RPM (0C)
 
 For Engine Load, use command `41051234` (05 is Engine Load)
 
-## Status
-
-Device can read data from OBD2 via bluetooth, and it can display stuff on LCD, such as "Distance to empty" based on 
-fuel level, Engine coolant temperature, Battery voltage, etc. It can also display Engine Load or RPM on the led strip.
+You might want to configure poll interval from 200 ms to 10 seconds in `include/protocol.h` for better testing
 
 ## Circuit
 
@@ -73,6 +72,9 @@ docs might be mistaken, but easy to fix (by code).
 
 espressif/esp-idf commit hash 451f69cc2e11cf45e3a72905c9fb162ca9a08936
 
+This project works with esp-idf at above commit hash. It did not work on a more up-to-date version however - that problem 
+might have been fixed in esp-idf by now.
+
 ## Configure
 
 Get your OBD2 bluetooth device's address (plug into your car, check what device you see on your smartphone). 
@@ -95,5 +97,4 @@ Not sure why, but `make monitor` works only if `led_strip_init()` is not called 
 
 ## TODOs
 
-- Using list of acceptable devices (eg. phone's MAC at home, OBD2 MAC at car), to avoid configuration overhead
-- Initialize OBD device, echo off, etc.
+- Button keypress sometimes not recognized: use a capacitor in control panel to make sure that keypress survives CPU interrupts (or increase CPU frequency if possible)

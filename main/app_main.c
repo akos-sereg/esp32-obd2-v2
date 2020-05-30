@@ -21,13 +21,16 @@ void main_task(void * pvParameter)
     i2c_master_init();
     led_strip_power_on_refresh();
 
-    // bootup displays
-    lcd_display_text("Connecting to", "OBD2 device");
-    led_strip_animation();
-
     led_strip_set(0);
     if (!app_state.device_on) {
+        lcd_display_text("Going to sleep", "");
+        led_strip_animation();
         lcd_turn_off();
+    }
+    else {
+        // bootup displays
+        lcd_display_text("Connecting to", "OBD2 device");
+        led_strip_animation();
     }
 
     while(1) {
@@ -70,8 +73,10 @@ void main_task(void * pvParameter)
                 now = get_epoch_milliseconds();
 
                 // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
-                if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
-                    bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
+                if (app_state.led_strip_on) {
+                    if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
+                        bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
+                    }
                 }
 
                 // sending request - value for LCD page
@@ -120,6 +125,7 @@ void app_main()
     LCD_DISPLAY_MODE = get_nvs_value(NVS_KEY_MODE);
         // first time since esp32 deploy, set to default
     if (LCD_DISPLAY_MODE == -1) {
+        // first time since esp32 deploy, set to default
         LCD_DISPLAY_MODE = 0;
         set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
     }
@@ -130,6 +136,13 @@ void app_main()
         // first time since esp32 deploy, set to default
         app_state.device_on = 1;
         set_nvs_value(NVS_KEY_IS_ON, app_state.device_on);
+    }
+
+    app_state.led_strip_on = get_nvs_value(NVS_KEY_IS_LS_ON);
+    if (app_state.led_strip_on == -1) {
+        // first time since esp32 deploy, set to default
+        app_state.led_strip_on = 1;
+        set_nvs_value(NVS_KEY_IS_LS_ON, app_state.led_strip_on);
     }
 
     xTaskCreate(&main_task, "main_task", 4096, NULL, 5, NULL);

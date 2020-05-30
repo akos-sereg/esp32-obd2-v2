@@ -25,6 +25,7 @@ typedef struct app_state_t {
   } obd2_values;
 
   int device_on;
+  int led_strip_on;
 } app_state_t;
 
 extern app_state_t app_state;
