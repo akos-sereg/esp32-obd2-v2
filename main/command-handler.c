@@ -70,10 +70,13 @@ void handle_obd2_response(char *obd2_response) {
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.engine_load = ceil(a / 2.55); // result is a number between 0 to 100 (engine load in %)
-        app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 11.1); // result is a number between 0 and 9 (can be displayed on led strip)
 
-        if (app_state.obd2_values.engine_load > 9) {
-            app_state.obd2_values.engine_load = 9;
+        // result is a number between 0 and 5 (can be displayed on led strip)
+        // 20.0 = 100 / 5
+        app_state.obd2_values.engine_load = ceil(app_state.obd2_values.engine_load / 20.0);
+
+        if (app_state.obd2_values.engine_load > 5) {
+            app_state.obd2_values.engine_load = 5;
         }
 
         led_strip_set(app_state.obd2_values.engine_load);
@@ -87,14 +90,15 @@ void handle_obd2_response(char *obd2_response) {
         printf("Detected as RPM value\n");
         int baseline_rpm = 900;
         int max_rpm = 3600;
-        double magic = 9 / (double)(max_rpm - baseline_rpm); // 0.00333333333
+        int num_of_leds = 5;
+        double magic = num_of_leds / (double)(max_rpm - baseline_rpm);
 
         app_state.obd2_values.rpm = ((256 * a) + b) / 4; // value from 0 to 16383
         app_state.obd2_values.rpm -= baseline_rpm;
         app_state.obd2_values.rpm = ceil((double)(app_state.obd2_values.rpm * (double)magic));
 
-        if (app_state.obd2_values.rpm > 9) {
-            app_state.obd2_values.rpm = 9;
+        if (app_state.obd2_values.rpm > num_of_leds) {
+            app_state.obd2_values.rpm = num_of_leds;
         }
         printf("Setting led strip status to: %d as a=%d, b=%d\n", app_state.obd2_values.rpm, a, b);
         led_strip_set(app_state.obd2_values.rpm);

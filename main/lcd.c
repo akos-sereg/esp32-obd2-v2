@@ -59,6 +59,11 @@ void toggle_lcd_backlight() {
     set_nvs_value(NVS_KEY_LCD_BACKLIGHT, lcd_backlight ? 1 : 0);
 }
 
+void lcd_turn_off() {
+    i2c_lcd1602_clear(lcd_info);
+    i2c_lcd1602_set_backlight(lcd_info, false);
+}
+
 void refresh_lcd_display() {
     char line[32];
 

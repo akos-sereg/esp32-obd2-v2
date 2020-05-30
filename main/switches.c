@@ -43,7 +43,16 @@ void listen_switches(void* arg)
                 if (current_state == 1) {
                     // sw_key_pressed_at = get_epoch_milliseconds();
                     app_state.device_on = app_state.device_on == 1 ? 0 : 1;
+                    set_nvs_value(NVS_KEY_IS_ON, app_state.device_on);
+
                     led_strip_power_on_refresh();
+
+                    if (!app_state.device_on) {
+                        led_strip_set(0);
+                        lcd_turn_off();
+                    } else {
+                        esp_restart();
+                    }
                 }
 
                 // falling edge

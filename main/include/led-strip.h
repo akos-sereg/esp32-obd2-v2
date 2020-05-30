@@ -14,7 +14,7 @@
 #define LED_STRIP_5	1   // pad select
 #define LED_BUTTON	27  // normal
 
-/* when GPIO 22 or 23 is wired, button should be pressed on esp32 device when deploying */
+/* when GPIO 22 is wired, button should be pressed on esp32 device when deploying */
 
 // todo: rename this method
 extern void engine_load_init();
