@@ -1,6 +1,7 @@
 #include "include/lcd.h"
 
 bool lcd_backlight = true;
+char previous_title_line[32];
 char previous_data_line[32];
 
 /*
@@ -77,9 +78,15 @@ void refresh_lcd_display() {
 
     switch (LCD_DISPLAY_MODE) {
         case 0:
-            sprintf(title_line, "Fuel: %.1f l", app_state.obd2_values.fuel_in_liter);
-            sprintf(line, "Distance: %d km", app_state.obd2_values.distance_to_empty_km);
-            if (strcmp(previous_data_line, line) == 0) {
+            if (app_state.obd2_values.fuel_in_liter == -1.0) {
+                sprintf(title_line, "Fuel: (no data)");
+                sprintf(line, " ");
+            } else {
+                sprintf(title_line, "Fuel: %.1f l", app_state.obd2_values.fuel_in_liter);
+                sprintf(line, "%d km to empty", app_state.obd2_values.distance_to_empty_km);
+            }
+
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
@@ -90,14 +97,21 @@ void refresh_lcd_display() {
             break;
 
         case 1:
-            sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
-            if (strcmp(previous_data_line, line) == 0) {
+            sprintf(title_line, "Engine Coolant");
+            if (app_state.obd2_values.coolant_temp_in_celsius == -1) {
+                sprintf(line, "(no data)");
+            }
+            else {
+                sprintf(line, "%d %cC", app_state.obd2_values.coolant_temp_in_celsius, 223);
+            }
+
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
             i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, "Engine Coolant");
-            i2c_lcd1602_move_cursor(lcd_info, 5, 1);
+            i2c_lcd1602_write_string(lcd_info, title_line);
+            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
 
@@ -108,38 +122,42 @@ void refresh_lcd_display() {
             // -> 11.8 < x < 13.8 -> Orange
             // -> x < 11.8        -> Red
 
-
-            if (app_state.obd2_values.battery_voltage > 12.6) {
-                sprintf(line, "%.1f V (100%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 12.5) {
-                sprintf(line, "%.1f V (90%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 12.42) {
-                sprintf(line, "%.1f V (80%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 12.32) {
-                sprintf(line, "%.1f V (70%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 12.20) {
-                sprintf(line, "%.1f V (60%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 12.06) {
-                sprintf(line, "%.1f V (50%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 11.9) {
-                sprintf(line, "%.1f V (40%%)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 11.75) {
-                sprintf(line, "%.1f V (30%% LOW)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 11.58) {
-                sprintf(line, "%.1f V (20%% LOW)", app_state.obd2_values.battery_voltage);
-            } else if (app_state.obd2_values.battery_voltage > 11.31) {
-                sprintf(line, "%.1f V (10%% LOW)", app_state.obd2_values.battery_voltage);
+            sprintf(title_line, "Battery");
+            if (app_state.obd2_values.battery_voltage == -1.0) {
+                sprintf(line, "(no data)");
             } else {
-                sprintf(line, "%.1f V (0%% LOW)", app_state.obd2_values.battery_voltage);
+                if (app_state.obd2_values.battery_voltage > 12.6) {
+                    sprintf(line, "%.1f V (100%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 12.5) {
+                    sprintf(line, "%.1f V (90%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 12.42) {
+                    sprintf(line, "%.1f V (80%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 12.32) {
+                    sprintf(line, "%.1f V (70%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 12.20) {
+                    sprintf(line, "%.1f V (60%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 12.06) {
+                    sprintf(line, "%.1f V (50%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 11.9) {
+                    sprintf(line, "%.1f V (40%%)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 11.75) {
+                    sprintf(line, "%.1f V (30%% LOW)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 11.58) {
+                    sprintf(line, "%.1f V (20%% LOW)", app_state.obd2_values.battery_voltage);
+                } else if (app_state.obd2_values.battery_voltage > 11.31) {
+                    sprintf(line, "%.1f V (10%% LOW)", app_state.obd2_values.battery_voltage);
+                } else {
+                    sprintf(line, "%.1f V (0%% LOW)", app_state.obd2_values.battery_voltage);
+                }
             }
 
-            if (strcmp(previous_data_line, line) == 0) {
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
 
             i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, "Battery");
+            i2c_lcd1602_write_string(lcd_info, title_line);
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
             i2c_lcd1602_write_string(lcd_info, line);
             break;
@@ -148,6 +166,7 @@ void refresh_lcd_display() {
             return;
     }
 
+    sprintf(previous_title_line, "%s", title_line);
     sprintf(previous_data_line, "%s", line);
 }
 
