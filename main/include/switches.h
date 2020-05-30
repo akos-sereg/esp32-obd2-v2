@@ -12,10 +12,10 @@
 #include "nvs-store.h"
 #include "protocol.h"
 
-#define GPIO_INPUT_IO_1	    32
-#define GPIO_INPUT_IO_2	    36
-#define GPIO_INPUT_IO_3	    34
-#define GPIO_INPUT_IO_4	    35
+#define GPIO_INPUT_IO_1	    32 // top right
+#define GPIO_INPUT_IO_2	    36 // bottom right
+#define GPIO_INPUT_IO_3	    34 // bottom left
+#define GPIO_INPUT_IO_4	    35 // on off
 
 #define GPIO_INPUT_PIN_SEL  (1ULL<<GPIO_INPUT_IO)
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_1) | (1ULL<<GPIO_INPUT_IO_2) | (1ULL<<GPIO_INPUT_IO_3) | (1ULL<<GPIO_INPUT_IO_4))

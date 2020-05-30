@@ -41,19 +41,54 @@ void listen_switches(void* arg)
 
                 // rising edge
                 if (current_state == 1) {
-                    // sw_key_pressed_at = get_epoch_milliseconds();
-                    app_state.device_on = app_state.device_on == 1 ? 0 : 1;
-                    set_nvs_value(NVS_KEY_IS_ON, app_state.device_on);
 
-                    led_strip_power_on_refresh();
+                    // pressing ON/OFF button (top-left button with the led)
+                    if (io_num == GPIO_INPUT_IO_4) {
+                        // sw_key_pressed_at = get_epoch_milliseconds();
+                        app_state.device_on = app_state.device_on == 1 ? 0 : 1;
+                        set_nvs_value(NVS_KEY_IS_ON, app_state.device_on);
 
-                    if (!app_state.device_on) {
-                        led_strip_set(0);
-                        lcd_turn_off();
-                    } else {
-                        esp_restart();
+                        led_strip_power_on_refresh();
+
+                        if (!app_state.device_on) {
+                            led_strip_set(0);
+                            lcd_turn_off();
+                        } else {
+                            esp_restart();
+                        }
+                    }
+
+                    // pressing UP button (top-right)
+                    if (io_num == GPIO_INPUT_IO_1) {
+                        LCD_DISPLAY_MODE--;
+                        if (LCD_DISPLAY_MODE < 0) {
+                            LCD_DISPLAY_MODE = 0;
+                        }
+
+                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+                        instant_fetch_lcd_data();
+                        refresh_lcd_display();
+                    }
+
+                    // pressing DOWN button (bottom-right)
+                    if (io_num == GPIO_INPUT_IO_2) {
+                        LCD_DISPLAY_MODE++;
+                        if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
+                            LCD_DISPLAY_MODE = MAX_LCD_DISPLAY_MODE;
+                        }
+
+                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+                        instant_fetch_lcd_data();
+                        refresh_lcd_display();
+                    }
+
+                    // pressing led-strip-mode button (bottom-left)
+                    if (io_num == GPIO_INPUT_IO_3) {
+                        led_stip_animation();
                     }
                 }
+
+
 
                 // falling edge
                 /*if (current_state == 0) {

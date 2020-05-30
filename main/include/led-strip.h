@@ -29,6 +29,6 @@ extern void led_strip_power_on_refresh();
 /**
  * Plays animation when device is initialized
  */
-// extern void init_animation();
+extern void led_stip_animation();
 
 #endif

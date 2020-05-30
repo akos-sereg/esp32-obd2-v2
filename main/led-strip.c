@@ -32,8 +32,8 @@ void led_strip_set(int value) {
 void led_strip_power_on_refresh() {
     gpio_set_level(LED_BUTTON, app_state.device_on);
 }
-/*
-void init_animation() {
+
+void led_stip_animation() {
     int i = 0;
     int j = 0;
 
@@ -43,11 +43,11 @@ void init_animation() {
             vTaskDelay(50 / portTICK_RATE_MS);
         }
 
-        for (i=9; i!=-1; i--) {
+        for (i=5; i!=-1; i--) {
             led_strip_set(i);
             vTaskDelay(50 / portTICK_RATE_MS);
         }
     }
 
     led_strip_set(0);
-}*/
+}
