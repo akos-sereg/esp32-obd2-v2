@@ -161,6 +161,9 @@ char *get_lcd_page_obd_code() {
 
         case 2:
             return obd2_request_battery_voltage();
+
+        default:
+            return obd2_request_fuel_level();
     }
 
     return NULL;

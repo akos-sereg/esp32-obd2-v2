@@ -28,7 +28,6 @@ void bt_send_data(char *data) {
     bt_request_data[strlen(data)+1] = '\n';
 
     bt_error = esp_spp_write(bt_handle, strlen(data) + 2, bt_request_data);
-
     if (bt_error != ESP_OK) {
         printf("ERROR: %s\n", esp_err_to_name(bt_error));
     } else {

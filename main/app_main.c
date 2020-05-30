@@ -24,15 +24,15 @@ void main_task(void * pvParameter)
     lcd_display_text("Connecting to", "OBD2 device");
     // init_animation();
 
+    led_strip_set(0);
     if (!app_state.device_on) {
-        led_strip_set(0);
         lcd_turn_off();
     }
 
     while(1) {
         cnt++;
 
-        /* led_strip_set(cnt % 6); */
+        // led_strip_set(cnt % 6);
 
         if (app_state.device_on) {
 
@@ -105,21 +105,23 @@ void main_task(void * pvParameter)
             }
         }
 
-
-
-
         vTaskDelay(tick_rate_ms / portTICK_RATE_MS);
     }
 }
 
 void app_main()
 {
-    // init_bluetooth();
+    init_bluetooth();
     init_nvs_store();
 
     // load LCD display mode (page) from NVS memory - refresh_lcd_display() will show
     // the correct page when it is called
     LCD_DISPLAY_MODE = get_nvs_value(NVS_KEY_MODE);
+        // first time since esp32 deploy, set to default
+    if (LCD_DISPLAY_MODE == -1) {
+        LCD_DISPLAY_MODE = 0;
+        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+    }
 
     reset_app_state();
     app_state.device_on = get_nvs_value(NVS_KEY_IS_ON);
