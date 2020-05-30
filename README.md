@@ -61,10 +61,13 @@ Connectors to esp32 based control module
 [BLACK ] DATA for LCD
 [BLACK ] Button - top/right
 [BLACK ] Button - bottom/right
-[BLACK ] Button - on/off
+[BLACK ] Button - on/off 
 [BLACK ] Button - bottom/left
 
-Switches: GPIOs are grounded via one 1.5k Ohm resistor. Signal goes through 1k resistors.
+Switches: GPIOs are grounded via 1.5k Ohm resistors. Signal goes through 1k resistors.
+
+Note: Button GPIO orders are screwed up on physical control panel (soldering fail), code follows the order in this repo, above 
+docs might be mistaken, but easy to fix (by code).
 
 ## ESP-IDF
 
