@@ -2,8 +2,6 @@
 
 OBDII based car diagnostics dashboard.
 
-![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2/master/docs/board.jpg)
-
 ## Usage
 
 ### Display
@@ -87,6 +85,10 @@ Options choose step:
     2. enter menuconfig "Component config", choose "Bluetooth"
     3. enter menu Bluetooth, choose "Classic Bluetooth" and "SPP Profile"
     4. choose your options.
+    
+## Debug
+
+Not sure why, but `make monitor` works only if `led_strip_init()` is not called in `app_main.c`
 
 ## TODOs
 
