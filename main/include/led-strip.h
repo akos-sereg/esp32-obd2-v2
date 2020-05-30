@@ -16,8 +16,7 @@
 
 /* when GPIO 22 is wired, button should be pressed on esp32 device when deploying */
 
-// todo: rename this method
-extern void engine_load_init();
+extern void led_strip_init();
 
 /**
  * load value can be: 0-5
@@ -29,6 +28,6 @@ extern void led_strip_power_on_refresh();
 /**
  * Plays animation when device is initialized
  */
-extern void led_stip_animation();
+extern void led_strip_animation();
 
 #endif

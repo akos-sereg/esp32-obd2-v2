@@ -84,33 +84,9 @@ void listen_switches(void* arg)
 
                     // pressing led-strip-mode button (bottom-left)
                     if (io_num == GPIO_INPUT_IO_3) {
-                        led_stip_animation();
+                        led_strip_animation();
                     }
                 }
-
-
-
-                // falling edge
-                /*if (current_state == 0) {
-
-
-                    // short key press: navigate to next screen
-                    // sw_key_pressed_at would be set to 0 already if it was a long key press
-                    if (sw_key_pressed_at > 0) {
-                        LCD_DISPLAY_MODE++;
-                        if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
-                            LCD_DISPLAY_MODE = 0;
-                        }
-
-                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
-
-                        // we dont want to wait until the next lcd data refresh interval to get the screen updated
-                        instant_fetch_lcd_data();
-                        refresh_lcd_display();
-                    }
-
-                    sw_key_pressed_at = 0;
-                }*/
             }
         }
     }

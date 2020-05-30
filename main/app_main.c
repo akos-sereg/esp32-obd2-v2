@@ -16,13 +16,14 @@ void main_task(void * pvParameter)
     app_state.obd2_bluetooth.is_connected = 0;
 
     // initializing LCD, Bluetooth, Input switch
-    engine_load_init();
+    led_strip_init();
     setup_switches();
     i2c_master_init();
     led_strip_power_on_refresh();
 
+    // bootup displays
     lcd_display_text("Connecting to", "OBD2 device");
-    // init_animation();
+    led_strip_animation();
 
     led_strip_set(0);
     if (!app_state.device_on) {

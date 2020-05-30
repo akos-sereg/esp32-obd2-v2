@@ -1,6 +1,6 @@
 #include "include/led-strip.h"
 
-void engine_load_init() {
+void led_strip_init() {
 
     gpio_set_direction(LED_STRIP_1, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_STRIP_2, GPIO_MODE_OUTPUT);
@@ -33,7 +33,7 @@ void led_strip_power_on_refresh() {
     gpio_set_level(LED_BUTTON, app_state.device_on);
 }
 
-void led_stip_animation() {
+void led_strip_animation() {
     int i = 0;
     int j = 0;
 
