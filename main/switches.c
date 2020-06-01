@@ -36,6 +36,7 @@ void listen_switches(void* arg)
             }
 
             if ((io_num == GPIO_INPUT_IO_1 || io_num == GPIO_INPUT_IO_2 || io_num == GPIO_INPUT_IO_3 || io_num == GPIO_INPUT_IO_4) && SWITCH_1_STATE != current_state) {
+
                 printf("GPIO[%d] state: %d\n", io_num, current_state);
                 SWITCH_1_STATE = current_state;
 
@@ -58,29 +59,35 @@ void listen_switches(void* arg)
                         }
                     }
 
-                    // pressing UP button (top-right)
-                    if (io_num == GPIO_INPUT_IO_1) {
-                        LCD_DISPLAY_MODE--;
-                        if (LCD_DISPLAY_MODE < 0) {
-                            LCD_DISPLAY_MODE = 0;
+                    if (app_state.device_on // allow navigation buttons only if device is turned ON
+                        && app_state.obd2_bluetooth.is_connected // allow navigation buttons only if connected
+                        && !app_state.obd2_bluetooth.displaying_connected // allow navigation buttons only if we are not displaying "Connected." message
+                    ) {
+                        // pressing UP button (top-right)
+                        if (io_num == GPIO_INPUT_IO_1) {
+                            LCD_DISPLAY_MODE--;
+                            if (LCD_DISPLAY_MODE < 0) {
+                                LCD_DISPLAY_MODE = 0;
+                            }
+
+                            set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+                            instant_fetch_lcd_data();
+                            refresh_lcd_display();
                         }
 
-                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
-                        instant_fetch_lcd_data();
-                        refresh_lcd_display();
-                    }
+                        // pressing DOWN button (bottom-right)
+                        if (io_num == GPIO_INPUT_IO_2) {
+                            LCD_DISPLAY_MODE++;
+                            if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
+                                LCD_DISPLAY_MODE = MAX_LCD_DISPLAY_MODE;
+                            }
 
-                    // pressing DOWN button (bottom-right)
-                    if (io_num == GPIO_INPUT_IO_2) {
-                        LCD_DISPLAY_MODE++;
-                        if (LCD_DISPLAY_MODE == (MAX_LCD_DISPLAY_MODE + 1)) {
-                            LCD_DISPLAY_MODE = MAX_LCD_DISPLAY_MODE;
+                            set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
+                            instant_fetch_lcd_data();
+                            refresh_lcd_display();
                         }
-
-                        set_nvs_value(NVS_KEY_MODE, LCD_DISPLAY_MODE);
-                        instant_fetch_lcd_data();
-                        refresh_lcd_display();
                     }
+
 
                     // pressing led-strip-mode button (bottom-left)
                     if (io_num == GPIO_INPUT_IO_3) {
