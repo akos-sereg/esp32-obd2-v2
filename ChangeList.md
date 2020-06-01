@@ -4,6 +4,7 @@
  - led strip poll frequency from 300 to 200 ms
  - fuel calculation always take the min value of fuel level
  - prevent LCD display text overrun
+ - mode button: toggle lcd backlight
 
 # release/1.0.0
 

@@ -88,18 +88,21 @@ void listen_switches(void* arg)
                         }
                     }
 
+                    if (app_state.device_on) { // allow mode selection only if device is turned ON
 
-                    // pressing led-strip-mode button (bottom-left)
-                    if (io_num == GPIO_INPUT_IO_3) {
-                        /*app_state.led_strip_on = app_state.led_strip_on ? 0 : 1;
-                        if (!app_state.led_strip_on) {
-                            // led_strip_off_animation();
-                        } else {
-                            // led_strip_animation();
-                        }*/
+                        // pressing led-strip-mode button (bottom-left)
+                        if (io_num == GPIO_INPUT_IO_3) {
+                            /*app_state.led_strip_on = app_state.led_strip_on ? 0 : 1;
+                            if (!app_state.led_strip_on) {
+                                // led_strip_off_animation();
+                            } else {
+                                // led_strip_animation();
+                            }*/
 
-                        toggle_lcd_backlight();
+                            toggle_lcd_backlight();
+                        }
                     }
+
                 }
             }
         }
