@@ -90,6 +90,11 @@ void refresh_lcd_display() {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
+
+            if (strlen(title_line) > 16 || strlen(line) > 16) {
+                return;
+            }
+
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, title_line);
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
@@ -109,6 +114,11 @@ void refresh_lcd_display() {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
                 return;
             }
+
+            if (strlen(title_line) > 16 || strlen(line) > 16) {
+                return;
+            }
+
             i2c_lcd1602_clear(lcd_info);
             i2c_lcd1602_write_string(lcd_info, title_line);
             i2c_lcd1602_move_cursor(lcd_info, 0, 1);
@@ -153,6 +163,10 @@ void refresh_lcd_display() {
 
             if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
                 // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
+            if (strlen(title_line) > 16 || strlen(line) > 16) {
                 return;
             }
 
