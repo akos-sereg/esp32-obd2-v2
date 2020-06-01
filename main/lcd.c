@@ -96,10 +96,7 @@ void refresh_lcd_display() {
                 return;
             }
 
-            i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, title_line);
-            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
-            i2c_lcd1602_write_string(lcd_info, line);
+            lcd_display_text(title_line, line);
             break;
 
         case 1:
@@ -116,10 +113,7 @@ void refresh_lcd_display() {
                 return;
             }
 
-            i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, title_line);
-            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
-            i2c_lcd1602_write_string(lcd_info, line);
+            lcd_display_text(title_line, line);
             break;
 
         case 2:
@@ -163,10 +157,7 @@ void refresh_lcd_display() {
                 return;
             }
 
-            i2c_lcd1602_clear(lcd_info);
-            i2c_lcd1602_write_string(lcd_info, title_line);
-            i2c_lcd1602_move_cursor(lcd_info, 0, 1);
-            i2c_lcd1602_write_string(lcd_info, line);
+            lcd_display_text(title_line, line);
             break;
 
         default:
