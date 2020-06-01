@@ -1,5 +1,9 @@
 # Changelog
 
+# next release
+ - led strip poll frequency from 300 to 200 ms
+ - 
+
 # release/1.0.0
 
  - Displaying Fuel (liter, remaining km), Engine Coolant (C) and Battery (V)

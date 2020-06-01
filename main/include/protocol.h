@@ -24,7 +24,7 @@
 
 
 // for testing:
-#define BT_ENGINE_LOAD_POLL_INTERVAL 300 // in msec
+#define BT_ENGINE_LOAD_POLL_INTERVAL 200 // in msec
 #define BT_RESTART_POLLING_ENGINE_LOAD_AFTER    60000 // in msec - in case OBD2 did not respond for a while, restart polling
 #define BT_LCD_DATA_POLLING_INTERVAL 5000 // in msec
 

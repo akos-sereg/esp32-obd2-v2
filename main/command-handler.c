@@ -1,6 +1,12 @@
 #include "include/command-handler.h"
 
 /**
+ * fuel readings can vary depending on car's horizontal position (eg. uphill or flat ground), so
+ * we always take the min fuel reading when calculating "distance to empty"
+ */
+double min_fuel_reading;
+
+/**
  * Calculations based on: https://en.wikipedia.org/wiki/OBD-II_PIDs
  *
  * Whitespaces are removed from payload!
@@ -110,6 +116,11 @@ void handle_obd2_response(char *obd2_response) {
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.fuel_level = (double)(a / (double)2.55); // fuel level in % (value from 0 to 100)
+        if (min_fuel_reading < app_state.obd2_values.fuel_level) {
+            app_state.obd2_values.fuel_level = min_fuel_reading;
+        } else {
+            min_fuel_reading = app_state.obd2_values.fuel_level;
+        }
         app_state.obd2_values.fuel_in_liter = (double)(app_state.obd2_values.fuel_level / 100) * FUEL_TANK_LITER;
         app_state.obd2_values.distance_to_empty_km = ((double)app_state.obd2_values.fuel_in_liter / (double)AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
         printf("  --> Distance to empty set to: %d\n", app_state.obd2_values.distance_to_empty_km);
