@@ -51,17 +51,3 @@ void led_strip_animation() {
 
     led_strip_set(0);
 }
-
-void led_strip_off_animation() {
-    int i = 0;
-    int j = 0;
-
-    for (j=0; j!=3; j++) {
-        for (i=5; i!=-1; i--) {
-            led_strip_set(i);
-            vTaskDelay(100 / portTICK_RATE_MS);
-        }
-    }
-
-    led_strip_set(0);
-}
