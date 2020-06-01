@@ -89,7 +89,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_CONG_EVT:
         break;
     case ESP_SPP_WRITE_EVT:
-        printf("ESP_SPP_WRITE_EVT\n");
+        // printf("ESP_SPP_WRITE_EVT\n");
         break;
     case ESP_SPP_SRV_OPEN_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_SRV_OPEN_EVT");

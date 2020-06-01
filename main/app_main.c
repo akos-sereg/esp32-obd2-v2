@@ -5,6 +5,7 @@ void main_task(void * pvParameter)
 {
     int cnt = 0;
     int tick_rate_ms = 500;
+    int request_sent_in_iteration = 0;
     int64_t now;
 
     // initializing app state
@@ -35,6 +36,7 @@ void main_task(void * pvParameter)
 
     while(1) {
         cnt++;
+        request_sent_in_iteration = 0;
 
         // led_strip_set(cnt % 6);
 
@@ -69,21 +71,25 @@ void main_task(void * pvParameter)
 
             // connected to bluetooth, poll data periodically - responses will be handled automatically, we don't have to worry about
             // processing them and triggering the new requests
+
             if (app_state.obd2_bluetooth.is_connected) {
                 now = get_epoch_milliseconds();
-
-                // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
-                if (app_state.led_strip_on) {
-                    if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
-                        bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
-                    }
-                }
 
                 // sending request - value for LCD page
                 if ((get_time_last_lcd_data_sent() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
                     bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
                     reset_time_last_lcd_data_sent();
+                    request_sent_in_iteration = 1;
                 }
+
+                // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
+                if (app_state.led_strip_on && !request_sent_in_iteration) {
+                    if ((bt_get_last_request_sent() + BT_ENGINE_LOAD_POLL_INTERVAL) < now) {
+                        bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
+                    }
+                }
+
+
             }
 
             // connected to bluetooth OBD2 already, displaying data - one time refresh LCD

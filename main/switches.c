@@ -91,7 +91,12 @@ void listen_switches(void* arg)
 
                     // pressing led-strip-mode button (bottom-left)
                     if (io_num == GPIO_INPUT_IO_3) {
-                        led_strip_animation();
+                        app_state.led_strip_on = app_state.led_strip_on ? 0 : 1;
+                        if (!app_state.led_strip_on) {
+                            led_strip_off_animation();
+                        } else {
+                            led_strip_animation();
+                        }
                     }
                 }
             }
@@ -101,6 +106,11 @@ void listen_switches(void* arg)
 
 void setup_switches()
 {
+    gpio_set_direction(GPIO_INPUT_IO_1, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_INPUT_IO_2, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_INPUT_IO_3, GPIO_MODE_INPUT);
+    gpio_set_direction(GPIO_INPUT_IO_4, GPIO_MODE_INPUT);
+
     gpio_config_t io_conf;
 
     //disable interrupt

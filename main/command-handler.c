@@ -100,9 +100,9 @@ void handle_obd2_response(char *obd2_response) {
         if (app_state.obd2_values.rpm > num_of_leds) {
             app_state.obd2_values.rpm = num_of_leds;
         }
-        printf("Setting led strip status to: %d as a=%d, b=%d\n", app_state.obd2_values.rpm, a, b);
+        // printf("Setting led strip status to: %d as a=%d, b=%d\n", app_state.obd2_values.rpm, a, b);
         led_strip_set(app_state.obd2_values.rpm);
-    } else printf("NOT Detected as RPM value\n");
+    } // else printf("NOT Detected as RPM value\n");
 
     // Distance to Empty
     sprintf(req_pattern, "%s", obd2_request_fuel_level());

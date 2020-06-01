@@ -30,4 +30,6 @@ extern void led_strip_power_on_refresh();
  */
 extern void led_strip_animation();
 
+extern void led_strip_off_animation();
+
 #endif
