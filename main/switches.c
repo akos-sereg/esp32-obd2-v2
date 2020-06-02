@@ -102,7 +102,6 @@ void listen_switches(void* arg)
                             toggle_lcd_backlight();
                         }
                     }
-
                 }
             }
         }

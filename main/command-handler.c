@@ -4,7 +4,7 @@
  * fuel readings can vary depending on car's horizontal position (eg. uphill or flat ground), so
  * we always take the min fuel reading when calculating "distance to empty"
  */
-double min_fuel_reading;
+double min_fuel_reading = -1.0;
 
 /**
  * Calculations based on: https://en.wikipedia.org/wiki/OBD-II_PIDs
@@ -116,7 +116,7 @@ void handle_obd2_response(char *obd2_response) {
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.fuel_level = (double)(a / (double)2.55); // fuel level in % (value from 0 to 100)
-        if (min_fuel_reading < app_state.obd2_values.fuel_level) {
+        if (min_fuel_reading > 0 && min_fuel_reading < app_state.obd2_values.fuel_level) {
             app_state.obd2_values.fuel_level = min_fuel_reading;
         } else {
             min_fuel_reading = app_state.obd2_values.fuel_level;
