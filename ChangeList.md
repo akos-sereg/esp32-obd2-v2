@@ -1,6 +1,6 @@
 # Changelog
 
-# next release
+# release/2.0.0
  - led strip poll frequency from 300 to 200 ms
  - fuel calculation always take the min value of fuel level
  - prevent LCD display text overrun
