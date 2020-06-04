@@ -70,6 +70,12 @@ void handle_obd2_response(char *obd2_response) {
         req_test[1] = '1';
     }
 
+    if (!app_state.device_on) {
+        // OBD response received after switching device OFF, turning led strip off
+        led_strip_set(0);
+        return;
+    }
+
     // Engine Load
     sprintf(req_pattern, "%s", obd2_request_calculated_engine_load());
     remove_char(req_pattern, ' ');
