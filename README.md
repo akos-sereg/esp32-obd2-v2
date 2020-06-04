@@ -1,6 +1,8 @@
 # esp32-obd2-v2
 
-OBDII based car diagnostics dashboard.
+OBDII based dashboard.
+
+![Board](https://raw.githubusercontent.com/akos-sereg/esp32-obd2-v2/master/docs/images/20200604_125736.jpg)
 
 ## Usage
 
