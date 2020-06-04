@@ -55,21 +55,21 @@ You might want to configure poll interval from 200 ms to 10 seconds in `include/
 
 Connectors to esp32 based control module
 
-[RED  ] +5 V
-[BLUE ] GND
-[BLACK] Led on the Button (yellow, 110 Ohm)
-[BLACK] STRIP 1 (green, 110 Ohm)
-[BLACK] STRIP 2 (green, 110 Ohm)
-[BLACK] STRIP 3 (green, 110 Ohm)
-[BLACK] STRIP 4 (yellow, 110 Ohm)
-[BLACK] STRIP 5 (red, 500 Ohm)
+ - [RED  ] +5 V
+ - [BLUE ] GND
+ - [BLACK] Led on the Button (yellow, 110 Ohm)
+ - [BLACK] STRIP 1 (green, 110 Ohm)
+ - [BLACK] STRIP 2 (green, 110 Ohm)
+ - [BLACK] STRIP 3 (green, 110 Ohm)
+ - [BLACK] STRIP 4 (yellow, 110 Ohm)
+ - [BLACK] STRIP 5 (red, 500 Ohm)
 
-[YELLOW] CLK for LCD
-[BLACK ] DATA for LCD
-[BLACK ] Button - top/right
-[BLACK ] Button - bottom/right
-[BLACK ] Button - on/off 
-[BLACK ] Button - bottom/left
+ - [YELLOW] CLK for LCD
+ - [BLACK ] DATA for LCD
+ - [BLACK ] Button - top/right
+ - [BLACK ] Button - bottom/right
+ - [BLACK ] Button - on/off 
+ - [BLACK ] Button - bottom/left
 
 Switches: GPIOs are grounded via 1.5k Ohm resistors. Signal goes through 1k resistors.
 
