@@ -10,6 +10,12 @@ OBDII based dashboard.
 
 - There is a led strip (3 green, 1 yellow, 1 red) which is supposed to display the Engine Load
 - LCD display shows more information, based on it's mode set by up / down buttons
+  - Fuel: distance to empty in KMs, fuel level in Liters
+  - Engine Coolant: coolant temperature in Celsius. Although the car has a built-in gauge on the main dashboard that shows the coolant temperature, that value
+  is not reliable: according to the built-in gauge, engine coolant reaches 90 C much faster than the real value read from OBD2. Also, when the car is climbing 
+  uphill, and the weather is hot outside, it keeps displaying ~90 C, but the real coolant temperature can easily go up to 107 C (which is normal, as coolant is under pressure). 
+  Probably the car's manufacturer does not want to shock the driver by displaying the real coolant temperature.
+  - Battery health in Volts. In case the voltage drops under 11.8 V, the battery can still operate (eg. ignition still works), but the battery is close to its end of life.
 
 ### Buttons
 
