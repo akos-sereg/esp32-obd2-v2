@@ -1,6 +1,6 @@
 # Changelog
 
-# next release
+# release/2.0.1
  - off state handling fix
 
 # release/2.0.0
