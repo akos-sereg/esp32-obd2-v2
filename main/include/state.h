@@ -19,6 +19,7 @@ typedef struct app_state_t {
     double fuel_level; // value from 0% to 100%
     double fuel_in_liter;
     int coolant_temp_in_celsius;
+    int outside_temp_in_celsius;
     double battery_voltage;
     int rpm; // value from 0 to 9
 

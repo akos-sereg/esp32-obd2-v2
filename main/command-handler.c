@@ -99,7 +99,6 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
-        printf("Detected as RPM value\n");
         int baseline_rpm = 900;
         int max_rpm = 3600;
         int num_of_leds = 5;
@@ -129,7 +128,6 @@ void handle_obd2_response(char *obd2_response) {
         }
         app_state.obd2_values.fuel_in_liter = (double)(app_state.obd2_values.fuel_level / 100) * FUEL_TANK_LITER;
         app_state.obd2_values.distance_to_empty_km = ((double)app_state.obd2_values.fuel_in_liter / (double)AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
-        printf("  --> Distance to empty set to: %d\n", app_state.obd2_values.distance_to_empty_km);
         refresh_lcd_display();
     }
 
@@ -139,7 +137,15 @@ void handle_obd2_response(char *obd2_response) {
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.coolant_temp_in_celsius = a - 40;
-        printf("  --> Collant temp set to: %d\n", app_state.obd2_values.coolant_temp_in_celsius);
+        refresh_lcd_display();
+    }
+
+    // Intake air temperature
+    sprintf(req_pattern, "%s", obd2_request_intake_air_temperature());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        app_state.obd2_values.outside_temp_in_celsius = a - 40;
         refresh_lcd_display();
     }
 
@@ -149,7 +155,6 @@ void handle_obd2_response(char *obd2_response) {
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.battery_voltage = (double)((double)(255 * a) + b) / (double)1000;
-        printf("  --> Battery Voltage: %f\n", app_state.obd2_values.battery_voltage);
         refresh_lcd_display();
     }
 }

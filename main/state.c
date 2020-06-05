@@ -6,6 +6,7 @@ void reset_app_state() {
     app_state.obd2_values.distance_to_empty_km = -1;
     app_state.obd2_values.engine_load = 0;
     app_state.obd2_values.coolant_temp_in_celsius = -1;
+    app_state.obd2_values.outside_temp_in_celsius = -1;
     app_state.obd2_values.battery_voltage = -1.0;
     app_state.obd2_values.rpm = 0;
     app_state.obd2_values.fuel_level = 0;

@@ -1,5 +1,8 @@
 # Changelog
 
+# next release
+ - adding intake air temperature page (outside temperature)
+
 # release/2.0.1
  - off state handling fix
 

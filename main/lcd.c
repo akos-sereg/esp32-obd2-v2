@@ -160,6 +160,24 @@ void refresh_lcd_display() {
             lcd_display_text(title_line, line);
             break;
 
+        case 3:
+            sprintf(title_line, "Outside temp.");
+            if (app_state.obd2_values.outside_temp_in_celsius == -1) {
+                sprintf(line, "(no data)");
+            }
+            else {
+                sprintf(line, "%d %cC", app_state.obd2_values.outside_temp_in_celsius, 223);
+            }
+
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
+            lcd_display_text(title_line, line);
+
+            break;
+
         default:
             return;
     }
@@ -179,6 +197,9 @@ char *get_lcd_page_obd_code() {
 
         case 2:
             return obd2_request_battery_voltage();
+
+        case 3:
+            return obd2_request_intake_air_temperature();
 
         default:
             return obd2_request_fuel_level();
