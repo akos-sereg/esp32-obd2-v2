@@ -3,6 +3,7 @@
 # next release
  - adding intake air temperature page
  - adding ambient air temperature page
+ - adding altitude page (calculated based on air temperature and barometric pressure)
 
 # release/2.0.1
  - off state handling fix
