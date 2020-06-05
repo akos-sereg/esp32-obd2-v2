@@ -6,6 +6,8 @@ char *obd2_request_engine_coolant_temp() { return "01 05"; }
 char *obd2_request_fuel_level() { return "01 2F"; }
 char *obd2_request_battery_voltage() { return "01 42"; }
 char *obd2_request_intake_air_temperature() { return "01 0F"; }
+char *obd2_request_ambient_air_temperature() { return "01 46"; }
+char *obd2_request_abs_barometric_pressure() { return "01 33"; }
 
 void obd2_init_communication() {
     bt_send_data("AT E0"); // echo off

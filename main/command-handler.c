@@ -6,6 +6,8 @@
  */
 double min_fuel_reading = -1.0;
 
+void calculate_altitude(int barometric_pressure_in_kPa, int ambient_air_temp_in_celsius);
+
 /**
  * Calculations based on: https://en.wikipedia.org/wiki/OBD-II_PIDs
  *
@@ -145,7 +147,21 @@ void handle_obd2_response(char *obd2_response) {
     remove_char(req_pattern, ' ');
 
     if (strncmp(req_test, req_pattern, 4) == 0) {
-        app_state.obd2_values.outside_temp_in_celsius = a - 40;
+        app_state.obd2_values.intake_air_temp_in_celsius = a - 40;
+        refresh_lcd_display();
+    }
+
+    // Ambient air temperature
+    sprintf(req_pattern, "%s", obd2_request_ambient_air_temperature());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        app_state.obd2_values.ambient_air_temp_in_celsius = a - 40;
+
+        if (app_state.obd2_values.abs_barometric_pressure != -1) {
+            calculate_altitude(app_state.obd2_values.abs_barometric_pressure, app_state.obd2_values.ambient_air_temp_in_celsius);
+        }
+
         refresh_lcd_display();
     }
 
@@ -157,4 +173,26 @@ void handle_obd2_response(char *obd2_response) {
         app_state.obd2_values.battery_voltage = (double)((double)(255 * a) + b) / (double)1000;
         refresh_lcd_display();
     }
+
+    // Barometric pressure
+    sprintf(req_pattern, "%s", obd2_request_abs_barometric_pressure());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        app_state.obd2_values.abs_barometric_pressure = a;
+
+        if (app_state.obd2_values.ambient_air_temp_in_celsius != -1) {
+            calculate_altitude(app_state.obd2_values.abs_barometric_pressure, app_state.obd2_values.ambient_air_temp_in_celsius);
+        }
+
+        refresh_lcd_display();
+    }
+}
+
+void calculate_altitude(int barometric_pressure_in_kPa, int ambient_air_temp_in_celsius) {
+    // calculate altitude, based on this formula:
+    // https://keisan.casio.com/exec/system/1224585971
+    int barometric_pressure_in_hPa = barometric_pressure_in_kPa * 10;
+    app_state.obd2_values.altitude_in_meters = ((pow((1013.25 / barometric_pressure_in_hPa), (double)(1/5.257)) - 1) * (ambient_air_temp_in_celsius+273.15)) / 0.0065;
+
 }

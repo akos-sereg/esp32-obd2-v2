@@ -1,6 +1,7 @@
 #include "include/lcd.h"
 
 bool lcd_backlight = true;
+int lcd_request_count = 0;
 char previous_title_line[32];
 char previous_data_line[32];
 
@@ -84,8 +85,8 @@ void refresh_lcd_display() {
     switch (LCD_DISPLAY_MODE) {
         case 0:
             if (app_state.obd2_values.fuel_in_liter == -1.0) {
-                sprintf(title_line, "Fuel: (no data)");
-                sprintf(line, " ");
+                sprintf(title_line, "Fuel");
+                sprintf(line, "(no data)");
             } else {
                 sprintf(title_line, "Fuel: %.1f l", app_state.obd2_values.fuel_in_liter);
                 sprintf(line, "%d km to empty", app_state.obd2_values.distance_to_empty_km);
@@ -161,12 +162,12 @@ void refresh_lcd_display() {
             break;
 
         case 3:
-            sprintf(title_line, "Outside temp.");
-            if (app_state.obd2_values.outside_temp_in_celsius == -1) {
+            sprintf(title_line, "Intake air temp.");
+            if (app_state.obd2_values.intake_air_temp_in_celsius == -1) {
                 sprintf(line, "(no data)");
             }
             else {
-                sprintf(line, "%d %cC", app_state.obd2_values.outside_temp_in_celsius, 223);
+                sprintf(line, "%d %cC", app_state.obd2_values.intake_air_temp_in_celsius, 223);
             }
 
             if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
@@ -175,7 +176,40 @@ void refresh_lcd_display() {
             }
 
             lcd_display_text(title_line, line);
+            break;
 
+        case 4:
+            sprintf(title_line, "Ambient air");
+            if (app_state.obd2_values.ambient_air_temp_in_celsius == -1) {
+                sprintf(line, "(no data)");
+            }
+            else {
+                sprintf(line, "%d %cC", app_state.obd2_values.ambient_air_temp_in_celsius, 223);
+            }
+
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
+            lcd_display_text(title_line, line);
+            break;
+
+        case 5:
+            sprintf(title_line, "Altitude");
+            if (app_state.obd2_values.altitude_in_meters == -1) {
+                sprintf(line, "(no data)");
+            }
+            else {
+                sprintf(line, "%d m", app_state.obd2_values.altitude_in_meters);
+            }
+
+            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
+                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
+                return;
+            }
+
+            lcd_display_text(title_line, line);
             break;
 
         default:
@@ -187,6 +221,8 @@ void refresh_lcd_display() {
 }
 
 char *get_lcd_page_obd_code() {
+    lcd_request_count++;
+
     switch(LCD_DISPLAY_MODE) {
         case 0:
             // fetching fuel level, this is required to calculate "Distance to empty"
@@ -200,6 +236,17 @@ char *get_lcd_page_obd_code() {
 
         case 3:
             return obd2_request_intake_air_temperature();
+
+        case 4:
+            return obd2_request_ambient_air_temperature();
+
+        case 5:
+            // ambient air temperature and barometric pressure are both needed for altitude calculation.
+            // so sometimes we fetch the barometric pressure, and sometimes we fetch the air temperature. once both values
+            // are fetched, altitude can be calculated and it can be displayed on the LCD. this tweak means that the
+            // value will be visible only after 2 iterations of LCD data polling, but thats fine.
+            return lcd_request_count % 2 == 0 ?
+                obd2_request_abs_barometric_pressure() : obd2_request_ambient_air_temperature();
 
         default:
             return obd2_request_fuel_level();
