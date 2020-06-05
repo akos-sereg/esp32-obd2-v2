@@ -121,6 +121,11 @@ static void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
 
           printf("OBD2 device found: %s\n", bt_address);
 
+          if (strncmp(remote_device_addr_2, bt_address, strlen(remote_device_addr_2)) == 0) {
+            // connected to phone
+            reset_app_state_demo();
+          }
+
           memcpy(peer_bd_addr, param->disc_res.bda, ESP_BD_ADDR_LEN);
           esp_spp_start_discovery(peer_bd_addr);
           esp_bt_gap_cancel_discovery();

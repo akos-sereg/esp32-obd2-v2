@@ -11,6 +11,9 @@ typedef struct app_state_t {
     // if true, we already displayed "Connected to OBD2" message on LCD display for enough time,
     // and we should no longer have it displayed.
     int displayed_connected;
+
+    // if true, the device connected to the phone which is for testing purposes, so we can run in demo mode
+    int is_connected_to_phone;
   } obd2_bluetooth;
 
   struct obd2_values {
@@ -34,5 +37,6 @@ typedef struct app_state_t {
 
 extern app_state_t app_state;
 extern void reset_app_state();
+extern void reset_app_state_demo();
 
 #endif
