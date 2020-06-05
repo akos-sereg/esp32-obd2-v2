@@ -198,7 +198,13 @@ void refresh_lcd_display() {
         case 5:
             sprintf(title_line, "Altitude");
             if (app_state.obd2_values.altitude_in_meters == -1) {
-                sprintf(line, "(no data)");
+                if (app_state.obd2_values.abs_barometric_pressure == -1 && app_state.obd2_values.ambient_air_temp_in_celsius == -1) {
+                    sprintf(line, "(no data)");
+                }
+                else {
+                    sprintf(line, "(1/2 data)");
+                }
+
             }
             else {
                 sprintf(line, "%d m", app_state.obd2_values.altitude_in_meters);
