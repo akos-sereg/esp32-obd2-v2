@@ -246,7 +246,7 @@ void refresh_lcd_display() {
 
             }
             else {
-                sprintf(line, "%d m", app_state.obd2_values.altitude_in_meters);
+                sprintf(line, "%d m (+-30m)", app_state.obd2_values.altitude_in_meters);
             }
 
             if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {

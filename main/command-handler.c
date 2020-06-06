@@ -193,6 +193,13 @@ void calculate_altitude(int barometric_pressure_in_kPa, int ambient_air_temp_in_
     // calculate altitude, based on this formula:
     // https://keisan.casio.com/exec/system/1224585971
     int barometric_pressure_in_hPa = barometric_pressure_in_kPa * 10;
+
+    // barometric pressure is in kPa, possible values in hPa are in 10 hPa steps, eg. 980 -> 990 -> 1000
+    // values read from OBD2 device are in format ceil(kPa), so we add 5 hPa and we will display +- 30m
+    // unfortunately we cannot read the value in better precision - kPa value in int is good enough for
+    // the car to operate
+    barometric_pressure_in_hPa += 5;
+
     app_state.obd2_values.altitude_in_meters = ((pow((1013.25 / barometric_pressure_in_hPa), (double)(1/5.257)) - 1) * (ambient_air_temp_in_celsius+273.15)) / 0.0065;
 
 }
