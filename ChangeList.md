@@ -5,7 +5,7 @@
  - adding ambient air temperature page
  - adding altitude page (calculated based on air temperature and barometric pressure)
  - lcd write interference fix
- - main tick rate changed from 500 ms to 50 ms
+ - main tick rate changed from 500 ms to 50 ms when connected to real OBD2 device (eg. not phone when testing)
 
 # release/2.0.1
  - off state handling fix

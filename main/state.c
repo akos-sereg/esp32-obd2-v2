@@ -3,6 +3,10 @@
 app_state_t app_state;
 
 void reset_app_state() {
+    // obd2 mode
+    app_state.obd2_bluetooth.is_connected_to_phone = 0;
+
+    // state of the app
     app_state.obd2_values.distance_to_empty_km = -1;
     app_state.obd2_values.engine_load = 0;
     app_state.obd2_values.coolant_temp_in_celsius = -1;
@@ -19,6 +23,10 @@ void reset_app_state() {
 // below values are being used when device connects to phone, instead of the real
 // obd2 device in the car
 void reset_app_state_demo() {
+    // demo mode
+    app_state.obd2_bluetooth.is_connected_to_phone = 1;
+
+    // state of the app
     app_state.obd2_values.distance_to_empty_km = 243;
     app_state.obd2_values.engine_load = 3;
     app_state.obd2_values.coolant_temp_in_celsius = 87;

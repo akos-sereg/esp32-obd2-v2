@@ -5,6 +5,7 @@ void main_task(void * pvParameter)
 {
     int cnt = 0;
     int tick_rate_ms = 50;
+    int tick_rate_on_phone_ms = 500;
     int request_sent_in_iteration = 0;
     int64_t now;
 
@@ -115,7 +116,7 @@ void main_task(void * pvParameter)
             }
         }
 
-        vTaskDelay(tick_rate_ms / portTICK_RATE_MS);
+        vTaskDelay((app_state.obd2_bluetooth.is_connected_to_phone ? tick_rate_on_phone_ms : tick_rate_ms) / portTICK_RATE_MS);
     }
 }
 
