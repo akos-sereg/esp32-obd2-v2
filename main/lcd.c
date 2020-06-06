@@ -1,7 +1,7 @@
 #include "include/lcd.h"
 
 bool lcd_backlight = true;
-int lcd_is_locked = 0;
+volatile int lcd_is_locked = 0;
 long lcd_locked_timestamp_ms = 0;
 int lcd_request_count = 0;
 char previous_title_line[32];
