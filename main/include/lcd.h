@@ -14,6 +14,8 @@
 #define I2C_MASTER_SDA_IO		5
 #define I2C_MASTER_SCL_IO		17
 
+#define LCD_LOCK_TIMEOUT        3000 // in ms
+
 extern void i2c_master_init(void);
 extern void refresh_lcd_display();
 extern void lcd_display_text(char *line1, char *line2);

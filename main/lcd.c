@@ -1,9 +1,15 @@
 #include "include/lcd.h"
 
 bool lcd_backlight = true;
+int lcd_is_locked = 0;
+long lcd_locked_timestamp_ms = 0;
 int lcd_request_count = 0;
 char previous_title_line[32];
 char previous_data_line[32];
+
+int lcd_is_resource_locked();
+void lcd_lock();
+void lcd_unlock();
 
 /*
    Adding / modifying LCD display pages:
@@ -51,6 +57,15 @@ void lcd_display_text(char *line1, char *line2) {
         return;
     }
 
+    if (lcd_is_resource_locked()) {
+        // if we are here, and we initiate i2c communication with LCD display, we might cause
+        // an interference with another thread's i2c communication, and LCD display would show
+        // screwed up characters
+        return;
+    }
+
+    lcd_lock();
+
     i2c_lcd1602_clear(lcd_info);
     i2c_lcd1602_write_string(lcd_info, line1);
 
@@ -58,17 +73,41 @@ void lcd_display_text(char *line1, char *line2) {
         i2c_lcd1602_move_cursor(lcd_info, 0, 1);
         i2c_lcd1602_write_string(lcd_info, line2);
     }
+
+    lcd_unlock();
 }
 
 void toggle_lcd_backlight() {
+    if (lcd_is_resource_locked()) {
+        // if we are here, and we initiate i2c communication with LCD display, we might cause
+        // an interference with another thread's i2c communication, and LCD display would show
+        // screwed up characters
+        return;
+    }
+
+    lcd_lock();
+
     lcd_backlight = !lcd_backlight;
     i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
     set_nvs_value(NVS_KEY_LCD_BACKLIGHT, lcd_backlight ? 1 : 0);
+
+    lcd_unlock();
 }
 
 void lcd_turn_off() {
+    if (lcd_is_resource_locked()) {
+        // if we are here, and we initiate i2c communication with LCD display, we might cause
+        // an interference with another thread's i2c communication, and LCD display would show
+        // screwed up characters
+        return;
+    }
+
+    lcd_lock();
+
     i2c_lcd1602_clear(lcd_info);
     i2c_lcd1602_set_backlight(lcd_info, false);
+
+    lcd_unlock();
 }
 
 void refresh_lcd_display() {
@@ -179,7 +218,7 @@ void refresh_lcd_display() {
             break;
 
         case 4:
-            sprintf(title_line, "Ambient air");
+            sprintf(title_line, "Outside temp.");
             if (app_state.obd2_values.ambient_air_temp_in_celsius == -1) {
                 sprintf(line, "(no data)");
             }
@@ -259,4 +298,31 @@ char *get_lcd_page_obd_code() {
     }
 
     return NULL;
+}
+
+int lcd_is_resource_locked() {
+    int current_time = get_epoch_milliseconds();
+
+    // resource is not locked
+    if (!lcd_is_locked) {
+        return 0;
+    }
+
+    // check if timeout reached and unlock lcd resource
+    if ((current_time - lcd_locked_timestamp_ms) > LCD_LOCK_TIMEOUT) {
+        lcd_is_locked = 0;
+        return 0;
+    }
+
+    // resource is locked and cannot be used
+    return 1;
+}
+
+void lcd_lock() {
+    lcd_is_locked = 1;
+    lcd_locked_timestamp_ms = get_epoch_milliseconds();
+}
+
+void lcd_unlock() {
+    lcd_is_locked = 0;
 }
