@@ -28,6 +28,8 @@ void handle_obd2_response(char *obd2_response) {
 
     int a = -1; // first byte of response
     int b = -1; // second byte of response
+    int c = -1; // 3rd
+    int d = -1; // 4th
     char *ptr;
     char hex_buf[3];
 
@@ -58,6 +60,22 @@ void handle_obd2_response(char *obd2_response) {
         && ((obd2_response[7] >= '0' && obd2_response[7] <= '9') || (obd2_response[7] >= 'A' && obd2_response[7] <= 'F'))) {
         sprintf(hex_buf, "%c%c", obd2_response[6], obd2_response[7]);
         b = strtol(hex_buf, &ptr, 16);
+    }
+
+    // in case response is "410C12345678", c = 56 in hex
+    if (strlen(obd2_response) >= 10
+        && ((obd2_response[8] >= '0' && obd2_response[8] <= '9') || (obd2_response[8] >= 'A' && obd2_response[8] <= 'F'))
+        && ((obd2_response[9] >= '0' && obd2_response[9] <= '9') || (obd2_response[9] >= 'A' && obd2_response[9] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[8], obd2_response[9]);
+        c = strtol(hex_buf, &ptr, 16);
+    }
+
+    // in case response is "410C12345678", d = 78 in hex
+    if (strlen(obd2_response) >= 12
+        && ((obd2_response[10] >= '0' && obd2_response[10] <= '9') || (obd2_response[10] >= 'A' && obd2_response[10] <= 'F'))
+        && ((obd2_response[11] >= '0' && obd2_response[11] <= '9') || (obd2_response[11] >= 'A' && obd2_response[11] <= 'F'))) {
+        sprintf(hex_buf, "%c%c", obd2_response[10], obd2_response[11]);
+        d = strtol(hex_buf, &ptr, 16);
     }
 
     // printf("  --> [OBD Response] values are: a = %d, b = %d\n", a, b);
@@ -172,6 +190,24 @@ void handle_obd2_response(char *obd2_response) {
     if (strncmp(req_test, req_pattern, 4) == 0) {
         app_state.obd2_values.battery_voltage = (double)((double)(255 * a) + b) / (double)1000;
         refresh_lcd_display();
+    }
+
+    // Odometer
+    sprintf(req_pattern, "%s", obd2_request_odometer());
+    remove_char(req_pattern, ' ');
+
+    if (strncmp(req_test, req_pattern, 4) == 0) {
+        long odometer = ((a * pow(2, 24)) + (b * pow(2, 16)) + (c * pow(2, 8)) + d);
+
+        if (app_state.start_odometer == -1) {
+            // first reading, after app init
+            app_state.start_odometer = odometer;
+        }
+        else {
+            // lcd screen readings
+            app_state.latest_odometer = odometer;
+            refresh_lcd_display();
+        }
     }
 
     // Barometric pressure

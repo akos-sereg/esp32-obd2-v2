@@ -33,6 +33,8 @@ typedef struct app_state_t {
 
   int device_on;
   int led_strip_on;
+  int start_odometer; // odometer reading when app starts up
+  int latest_odometer; // last odometer reading
 } app_state_t;
 
 extern app_state_t app_state;

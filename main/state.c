@@ -18,6 +18,9 @@ void reset_app_state() {
     app_state.obd2_values.fuel_in_liter = -1.0;
     app_state.obd2_values.altitude_in_meters = -1;
     app_state.obd2_values.abs_barometric_pressure = -1;
+
+    app_state.start_odometer = -1;
+    app_state.latest_odometer = -1;
 }
 
 // below values are being used when device connects to phone, instead of the real
@@ -38,4 +41,7 @@ void reset_app_state_demo() {
     app_state.obd2_values.fuel_in_liter = 43.0;
     app_state.obd2_values.altitude_in_meters = 232;
     app_state.obd2_values.abs_barometric_pressure = 912;
+
+    app_state.start_odometer = 103232;
+    app_state.latest_odometer = 107123;
 }

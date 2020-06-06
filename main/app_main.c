@@ -5,7 +5,6 @@ void main_task(void * pvParameter)
 {
     int cnt = 0;
     int tick_rate_ms = 50;
-    int tick_rate_on_phone_ms = 500;
     int request_sent_in_iteration = 0;
     int64_t now;
 
@@ -38,6 +37,10 @@ void main_task(void * pvParameter)
     while(1) {
         cnt++;
         request_sent_in_iteration = 0;
+
+        if (app_state.obd2_bluetooth.is_connected_to_phone) {
+            tick_rate_ms = 500;
+        }
 
         // led_strip_set(cnt % 6);
 
@@ -78,9 +81,23 @@ void main_task(void * pvParameter)
 
                 // sending request - value for LCD page
                 if ((get_time_last_lcd_data_sent() + BT_LCD_DATA_POLLING_INTERVAL) < now) {
-                    bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
-                    reset_time_last_lcd_data_sent();
-                    request_sent_in_iteration = 1;
+
+                    // make sure we have start odometer reading when app starts up, and we are connected to bluetooth OBD2
+                    // below request should only be sent once, provided that
+                    // - we have no start_odometer reading yet
+                    // - we have already read data for the current LCD screen
+                    if (app_state.start_odometer == -1 && get_time_last_lcd_data_sent() > 0) {
+                        bt_send_data(obd2_request_odometer()); // OBD PID of current page displayed by LCD
+                        reset_time_last_lcd_data_sent();
+                        request_sent_in_iteration = 1;
+                    }
+                    // normal operation: read relevant OBD pid from device, to make sure that LCD display keeps displaying
+                    // up-to-date information
+                    else {
+                        bt_send_data(get_lcd_page_obd_code()); // OBD PID of current page displayed by LCD
+                        reset_time_last_lcd_data_sent();
+                        request_sent_in_iteration = 1;
+                    }
                 }
 
                 // sending request - realtime RPM or Engine Load - keep polling even if last time we failed to process response
@@ -116,7 +133,7 @@ void main_task(void * pvParameter)
             }
         }
 
-        vTaskDelay((app_state.obd2_bluetooth.is_connected_to_phone ? tick_rate_on_phone_ms : tick_rate_ms) / portTICK_RATE_MS);
+        vTaskDelay(tick_rate_ms / portTICK_RATE_MS);
     }
 }
 
