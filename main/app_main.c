@@ -4,7 +4,7 @@
 void main_task(void * pvParameter)
 {
     int cnt = 0;
-    int tick_rate_ms = 500;
+    int tick_rate_ms = 50;
     int request_sent_in_iteration = 0;
     int64_t now;
 
@@ -88,8 +88,6 @@ void main_task(void * pvParameter)
                         bt_send_data(LED_STRIP_DISPLAYS_RPM ? obd2_request_engine_rpm() : obd2_request_calculated_engine_load());
                     }
                 }
-
-
             }
 
             // connected to bluetooth OBD2 already, displaying data - one time refresh LCD

@@ -103,6 +103,5 @@ Options choose step:
 
 Not sure why, but `make monitor` works only if `led_strip_init()` is not called in `app_main.c`
 
-## TODOs
-
-- Button keypress sometimes not recognized: use a capacitor in control panel to make sure that keypress survives CPU interrupts (or increase CPU frequency if possible)
+Consider changing `tick_rate_ms` value to 500 ms in `app_main.c` when debugging, to make sure that `BT SPP Server` console 
+is not getting flooded.
