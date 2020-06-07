@@ -1,6 +1,6 @@
 # Changelog
 
-# next release
+# release/3.0.0
  - adding intake air temperature page
  - adding ambient air temperature page
  - adding altitude page (calculated based on air temperature and barometric pressure)
