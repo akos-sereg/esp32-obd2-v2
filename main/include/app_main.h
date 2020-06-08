@@ -25,6 +25,12 @@
 
 #define FUEL_TANK_LITER                        55
 
+// when tank is full, OBD reports 88% fuel level - the physical sensor in the tank is probably
+// measuring the full height of the fuel tank, and the fuel indicator gauge is doing some adjustments
+// in my car based on this - so in order to get 100% when tank is full, we have to add the below
+// volume as if it was part of the tank
+#define FUEL_TANK_LITER_CORRECTION             6
+
 // liter/100km - this one is for "distance to empty" calculation - use upper bound of real consumption
 // to make sure that displayed "distance to empty" value is safe
 #define AVERAGE_FUEL_CONSUMPTION_PER_100_KM    7.2

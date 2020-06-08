@@ -2,6 +2,7 @@
 
 # next release
 - display trip statistics: distance traveled (km) and duration
+- fuel level correction added
 
 # release/3.0.0
  - adding intake air temperature page

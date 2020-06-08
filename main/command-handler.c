@@ -146,7 +146,7 @@ void handle_obd2_response(char *obd2_response) {
         } else {
             min_fuel_reading = app_state.obd2_values.fuel_level;
         }
-        app_state.obd2_values.fuel_in_liter = (double)(app_state.obd2_values.fuel_level / 100) * FUEL_TANK_LITER;
+        app_state.obd2_values.fuel_in_liter = (double)(app_state.obd2_values.fuel_level / 100) * (FUEL_TANK_LITER + FUEL_TANK_LITER_CORRECTION);
         app_state.obd2_values.distance_to_empty_km = ((double)app_state.obd2_values.fuel_in_liter / (double)AVERAGE_FUEL_CONSUMPTION_PER_100_KM) * 100;
         refresh_lcd_display();
     }
