@@ -11,7 +11,6 @@ extern char *obd2_request_battery_voltage();
 extern char *obd2_request_intake_air_temperature();
 extern char *obd2_request_ambient_air_temperature();
 extern char *obd2_request_abs_barometric_pressure();
-extern char *obd2_request_odometer();
 
 extern void obd2_init_communication();
 

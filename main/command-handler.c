@@ -192,24 +192,6 @@ void handle_obd2_response(char *obd2_response) {
         refresh_lcd_display();
     }
 
-    // Odometer
-    sprintf(req_pattern, "%s", obd2_request_odometer());
-    remove_char(req_pattern, ' ');
-
-    if (strncmp(req_test, req_pattern, 4) == 0) {
-        long odometer = ((a * pow(2, 24)) + (b * pow(2, 16)) + (c * pow(2, 8)) + d);
-
-        if (app_state.start_odometer == -1) {
-            // first reading, after app init
-            app_state.start_odometer = odometer;
-        }
-        else {
-            // lcd screen readings
-            app_state.latest_odometer = odometer;
-            refresh_lcd_display();
-        }
-    }
-
     // Barometric pressure
     sprintf(req_pattern, "%s", obd2_request_abs_barometric_pressure());
     remove_char(req_pattern, ' ');

@@ -257,40 +257,6 @@ void refresh_lcd_display() {
             lcd_display_text(title_line, line);
             break;
 
-        case 6:
-
-            if (app_state.start_odometer == -1 || app_state.latest_odometer == -1) {
-                sprintf(title_line, "Trip");
-                sprintf(line, "(no data)");
-            }
-            else {
-                int current_time = get_epoch_milliseconds();
-                if (current_time == 0) {
-                    current_time = 1;
-                }
-
-                sprintf(title_line, "Trip: %d km", (app_state.latest_odometer - app_state.start_odometer));
-
-                int minutes_total = floor(current_time / 1000 / 60);
-                int hours_total = floor(current_time / 1000 / 60 / 60);
-                int minutes_in_hour = minutes_total - (hours_total * 60);
-
-                if (minutes_total < 60) {
-                    sprintf(line, "in %d mins", minutes_total);
-                }
-                else {
-                    sprintf(line, "in %dh %dm", hours_total, minutes_in_hour);
-                }
-            }
-
-            if (strcmp(previous_data_line, line) == 0 && strcmp(previous_title_line, title_line) == 0) {
-                // we want to display the same value, ignore updating LCD, as LCD updates are always visible (eg. flickering)
-                return;
-            }
-
-            lcd_display_text(title_line, line);
-            break;
-
         default:
             return;
     }
@@ -326,9 +292,6 @@ char *get_lcd_page_obd_code() {
             // value will be visible only after 2 iterations of LCD data polling, but thats fine.
             return lcd_request_count % 2 == 0 ?
                 obd2_request_abs_barometric_pressure() : obd2_request_ambient_air_temperature();
-
-        case 6:
-            return obd2_request_odometer();
 
         default:
             return obd2_request_fuel_level();
