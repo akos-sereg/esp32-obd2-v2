@@ -50,7 +50,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 
-#include "smbus.h"
+#include "include/smbus.h"
 
 static const char * TAG = "smbus";
 

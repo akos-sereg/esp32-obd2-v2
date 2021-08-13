@@ -94,7 +94,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 
-#include "i2c-lcd1602.h"
+#include "include/i2c-lcd1602.h"
 
 #define TAG "i2c-lcd1602"
 

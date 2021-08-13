@@ -36,7 +36,7 @@
 #define I2C_LCD1602_H
 
 #include <stdbool.h>
-#include "smbus.h"
+#include "../../esp32-smbus/include/smbus.h"
 
 #ifdef __cplusplus
 extern "C" {

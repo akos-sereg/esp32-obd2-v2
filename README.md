@@ -93,6 +93,8 @@ not to your phone.
 
 ## Build
 
+Make sure that EXTRA_COMPONENT_DIRS parameters in CMakeLists.txt are properly set.
+
 Options choose step:
     1. idf.py menuconfig.
     2. enter menuconfig "Component config", choose "Bluetooth"

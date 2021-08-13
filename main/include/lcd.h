@@ -1,8 +1,8 @@
 #ifndef __lcd_h_included__
 #define __lcd_h_included__
 
-#include "smbus.h"
-#include "i2c-lcd1602.h"
+#include "../../components/esp32-smbus/include/smbus.h"
+#include "../../components/esp32-i2c-lcd1602/include/i2c-lcd1602.h"
 #include "state.h"
 #include "obd2.h"
 #include "switches.h"
