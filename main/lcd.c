@@ -3,12 +3,12 @@
 bool lcd_backlight = true;
 volatile int lcd_is_locked = 0;
 long lcd_locked_timestamp_ms = 0;
+long lcd_released_timestamp_ms = 0;
 int lcd_request_count = 0;
 char previous_title_line[32];
 char previous_data_line[32];
 
-int lcd_is_resource_locked();
-void lcd_lock();
+int lcd_acquire_lock();
 void lcd_unlock();
 
 /*
@@ -57,14 +57,12 @@ void lcd_display_text(char *line1, char *line2) {
         return;
     }
 
-    if (lcd_is_resource_locked()) {
+    if (!lcd_acquire_lock()) {
         // if we are here, and we initiate i2c communication with LCD display, we might cause
         // an interference with another thread's i2c communication, and LCD display would show
         // screwed up characters
         return;
     }
-
-    lcd_lock();
 
     i2c_lcd1602_clear(lcd_info);
     i2c_lcd1602_write_string(lcd_info, line1);
@@ -78,14 +76,12 @@ void lcd_display_text(char *line1, char *line2) {
 }
 
 void toggle_lcd_backlight() {
-    if (lcd_is_resource_locked()) {
+    if (!lcd_acquire_lock()) {
         // if we are here, and we initiate i2c communication with LCD display, we might cause
         // an interference with another thread's i2c communication, and LCD display would show
         // screwed up characters
         return;
     }
-
-    lcd_lock();
 
     lcd_backlight = !lcd_backlight;
     i2c_lcd1602_set_backlight(lcd_info, lcd_backlight);
@@ -95,14 +91,12 @@ void toggle_lcd_backlight() {
 }
 
 void lcd_turn_off() {
-    if (lcd_is_resource_locked()) {
+    if (!lcd_acquire_lock()) {
         // if we are here, and we initiate i2c communication with LCD display, we might cause
         // an interference with another thread's i2c communication, and LCD display would show
         // screwed up characters
         return;
     }
-
-    lcd_lock();
 
     i2c_lcd1602_clear(lcd_info);
     i2c_lcd1602_set_backlight(lcd_info, false);
@@ -300,29 +294,41 @@ char *get_lcd_page_obd_code() {
     return NULL;
 }
 
-int lcd_is_resource_locked() {
+int lcd_acquire_lock() {
     int current_time = get_epoch_milliseconds();
+
+    // check if lcd is untouched for a while. we can only access to the resource, if there was no write
+    // operation recently
+    int lcd_released_for_a_while = lcd_released_timestamp_ms == 0 ? 1 : 0;
+    if (!lcd_released_for_a_while && lcd_released_timestamp_ms > 0) {
+        if ((current_time - lcd_released_timestamp_ms) > LCD_RESTING_TIMEOUT) {
+            lcd_released_for_a_while = 1;
+        }
+    }
+
+    if (!lcd_released_for_a_while) {
+        return 0;
+    }
 
     // resource is not locked
     if (!lcd_is_locked) {
-        return 0;
+        lcd_is_locked = 1;
+        lcd_locked_timestamp_ms = get_epoch_milliseconds();
+        return 1;
     }
 
     // check if timeout reached and unlock lcd resource
     if ((current_time - lcd_locked_timestamp_ms) > LCD_LOCK_TIMEOUT) {
-        lcd_is_locked = 0;
-        return 0;
+        lcd_is_locked = 1;
+        lcd_locked_timestamp_ms = get_epoch_milliseconds();
+        return 1;
     }
 
     // resource is locked and cannot be used
-    return 1;
-}
-
-void lcd_lock() {
-    lcd_is_locked = 1;
-    lcd_locked_timestamp_ms = get_epoch_milliseconds();
+    return 0;
 }
 
 void lcd_unlock() {
     lcd_is_locked = 0;
+    lcd_released_timestamp_ms = get_epoch_milliseconds();
 }
